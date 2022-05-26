@@ -1,0 +1,45 @@
+FROM ubuntu:20.04
+#ARG _UID=6213
+#ARG _GID=11429
+#ARG _LOGIN=swx-jenkins
+#ARG _HOME=/var/home/$_LOGIN
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
+USER root
+
+RUN apt-get update && \
+    apt-get install -y \
+        sudo \
+        automake \
+        dh-make \
+        curl \
+        g++ \
+        git \
+        libcap2 \
+        libnuma-dev \
+        libtool \
+        make \
+        dpkg-dev \
+        fakeroot \
+        gpg \
+        dpkg-sig \
+	lsb-release \
+	devscripts \
+	vim
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+#RUN echo "${_LOGIN} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+#RUN mkdir -p $_HOME
+#RUN groupadd -f -g "$_GID" "$_LOGIN"
+#RUN useradd -u "$_UID" -g "$_GID" -s /bin/bash -m -d ${_HOME} "$_LOGIN"
+#RUN chown $_LOGIN $_HOME
+
+#ADD . /var/home/$_LOGIN
+ADD . /opt
+
+SHELL ["/bin/bash"]
+
+#USER "${_LOGIN}"
+ENTRYPOINT [ "/bin/bash", "--login", "--rcfile", "/etc/bashrc"]
